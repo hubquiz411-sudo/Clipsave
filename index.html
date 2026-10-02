@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClipSave — YouTube Video Downloader | Free, No Signup</title>
+<meta name="description" content="ClipSave lets you download YouTube videos and audio with direct links. Free forever, no signup, works on any device.">
+<style>
+:root{
+  --bg:#0f1115; --bg2:#161a21; --card:#1c212b; --line:#2a3140;
+  --txt:#f2f4f8; --mut:#9aa3b2; --red:#ff2d3f; --red2:#d61f30;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:"Segoe UI",Roboto,Arial,sans-serif;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.narrow{max-width:760px}
+a{color:var(--txt)}
+[hidden]{display:none!important}
+
+/* nav */
+.nav{background:#0b0d11;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-size:22px;font-weight:800;text-decoration:none;letter-spacing:.5px;cursor:pointer}
+.logo-mark{color:var(--red)}
+.links a{margin-left:22px;color:var(--mut);text-decoration:none;font-size:15px;cursor:pointer}
+.links a:hover{color:var(--txt)}
+
+/* hero */
+.hero{padding:64px 0 40px;text-align:center;background:radial-gradient(700px 340px at 50% -60px,#2a0f14,var(--bg))}
+.hero h1{font-size:clamp(30px,5vw,52px);font-weight:800;margin-bottom:12px}
+.sub{color:var(--mut);font-size:18px;max-width:640px;margin:0 auto 28px}
+.sub strong{color:var(--txt)}
+.dl-box{display:flex;gap:10px;max-width:700px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:8px}
+.dl-box input{flex:1;background:transparent;border:0;outline:0;color:var(--txt);font-size:16px;padding:12px 14px;min-width:0}
+.dl-box button{background:var(--red);border:0;color:#fff;font-size:17px;font-weight:700;padding:12px 34px;border-radius:10px;cursor:pointer;white-space:nowrap}
+.dl-box button:hover{background:var(--red2)}
+.dl-box button:disabled{opacity:.55;cursor:wait}
+.tiny{color:var(--mut);font-size:13px;margin-top:14px}
+
+/* status + result */
+.status{max-width:700px;margin:18px auto 0;padding:12px 16px;border-radius:10px;font-size:15px}
+.status.loading{background:#13202e;color:#7fc4ff}
+.status.error{background:#2e1418;color:#ff9aa3}
+.result{max-width:760px;margin:22px auto 0;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;text-align:left}
+.r-top{display:flex;gap:18px}
+.r-thumb{width:220px;max-width:40%;border-radius:10px;object-fit:cover;align-self:flex-start}
+.r-body{flex:1;min-width:0}
+.r-body h3{font-size:17px;margin-bottom:6px;word-break:break-word}
+.r-meta{color:var(--mut);font-size:14px;margin-bottom:14px}
+.qgroup{margin-top:14px}
+.qgroup h4{font-size:13px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.quals{display:flex;flex-wrap:wrap;gap:10px}
+.qbtn{display:inline-block;background:#232a38;border:1px solid var(--line);color:var(--txt);text-decoration:none;font-size:14px;font-weight:600;padding:9px 16px;border-radius:9px}
+.qbtn:hover{background:var(--red);border-color:var(--red)}
+.r-note{color:var(--mut);font-size:13px;margin-top:14px}
+details.vo{margin-top:12px}
+
+/* ad slots */
+.ad-slot{margin:26px auto;min-height:100px;max-width:970px;border:1.5px dashed #3a4358;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#5b6579;font-size:13px;letter-spacing:2px;text-transform:uppercase;background:#12151c}
+
+/* sections */
+.section{padding:56px 0}
+.section.alt{background:var(--bg2)}
+.section h2{text-align:center;font-size:30px;margin-bottom:32px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px 20px}
+.card .ic{font-size:30px;margin-bottom:10px}
+.card h3{font-size:17px;margin-bottom:8px}
+.card p{color:var(--mut);font-size:14px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px 22px;text-align:center}
+.step .n{width:44px;height:44px;border-radius:50%;background:var(--red);font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.step h3{margin-bottom:8px}
+.step p{color:var(--mut);font-size:14px}
+
+/* faq */
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:600;font-size:16px}
+details p{color:var(--mut);margin-top:10px;font-size:15px}
+
+/* legal pages */
+.legal h3{font-size:20px;margin:26px 0 10px}
+.legal p{color:var(--mut);margin-bottom:12px;font-size:15px}
+.legal p a{color:var(--txt)}
+.backlink{display:inline-block;margin-top:26px;color:var(--mut);text-decoration:none;cursor:pointer}
+.backlink:hover{color:var(--txt)}
+
+/* settings */
+.settings{max-width:760px;margin:18px auto 0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:14px}
+.settings summary{font-size:14px;color:var(--mut)}
+.settings p{font-size:13px}
+.settings .row{display:flex;gap:8px;margin-top:10px}
+.settings input{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--txt);padding:9px 12px;font-size:14px;min-width:0}
+.settings button{background:#232a38;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:9px 16px;font-size:14px;cursor:pointer}
+.settings button:hover{background:var(--red);border-color:var(--red)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:26px 0;background:#0b0d11}
+.foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--mut);font-size:14px}
+.foot nav a{margin-left:18px;color:var(--mut);text-decoration:none;cursor:pointer}
+.foot nav a:hover{color:var(--txt)}
+.powered{text-align:center;color:#5b6579;font-size:12px;margin-top:14px}
+
+@media(max-width:720px){
+  .grid4,.grid3{grid-template-columns:1fr}
+  .dl-box{flex-direction:column}
+  .dl-box button{width:100%}
+  .r-top{flex-direction:column}
+  .r-thumb{width:100%;max-width:100%}
+  .links{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="logo" data-go="home"><span class="logo-mark">&#9654;</span> ClipSave</a>
+    <nav class="links">
+      <a data-go="how">How it works</a>
+      <a data-go="faq">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- ==================== HOME ==================== -->
+<section id="sec-home">
+  <div class="hero">
+    <div class="wrap">
+      <h1>YouTube Video Downloader</h1>
+      <p class="sub">Paste any YouTube link and get <strong>instant download links</strong> — video and audio. Free forever, no signup, no server.</p>
+
+      <form id="dl-form" class="dl-box" autocomplete="off">
+        <input id="url-input" type="url" placeholder="Paste YouTube link here…  e.g. https://www.youtube.com/watch?v=…" required>
+        <button type="submit" id="dl-btn">Download</button>
+      </form>
+
+      <div id="status" class="status" hidden></div>
+
+      <div id="result" class="result" hidden>
+        <div class="r-top">
+          <img id="r-thumb" class="r-thumb" alt="video thumbnail">
+          <div class="r-body">
+            <h3 id="r-title"></h3>
+            <p id="r-meta" class="r-meta"></p>
+          </div>
+        </div>
+        <div class="qgroup" id="g-video" hidden>
+          <h4>Video</h4>
+          <div class="quals" id="r-video"></div>
+        </div>
+        <div class="qgroup" id="g-audio" hidden>
+          <h4>Audio</h4>
+          <div class="quals" id="r-audio"></div>
+        </div>
+        <details class="vo" id="g-vonly" hidden>
+          <summary>Video only (no sound)</summary>
+          <div class="quals" id="r-vonly" style="margin-top:10px"></div>
+        </details>
+        <p class="r-note">Tip: link par tap karein — file download ho jayegi.</p>
+      </div>
+
+      <details class="settings">
+        <summary>&#9881; Advanced: video-info server</summary>
+        <p>ClipSave video ki maloomat is public server se leta hai. Agar kabhi links na milen to yahan koi aur Invidious server likh kar Save dabayein.</p>
+        <div class="row">
+          <input id="api-input" type="url" placeholder="https://invidious.f5.si">
+          <button type="button" id="api-save">Save</button>
+          <button type="button" id="api-reset">Reset</button>
+        </div>
+      </details>
+
+      <p class="tiny">Works with youtube.com, youtu.be and Shorts links.</p>
+    </div>
+  </div>
+
+  <!-- AD SLOT 1: leaderboard banner under the hero.
+       Paste your AdSense / Adsterra / Monetag banner code inside the div below. -->
+  <div class="wrap">
+    <div class="ad-slot">
+      <span>Advertisement</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="wrap">
+      <h2>Why ClipSave?</h2>
+      <div class="grid4">
+        <div class="card"><div class="ic">&#127916;</div><h3>Direct Links</h3><p>Get straight-to-file download links for the video in the best available quality.</p></div>
+        <div class="card"><div class="ic">&#127925;</div><h3>Audio Downloads</h3><p>Grab just the audio track from any video as a compact file.</p></div>
+        <div class="card"><div class="ic">&#9889;</div><h3>Fast &amp; Free</h3><p>No accounts, no watermarks, no limits. Unlimited downloads, free forever.</p></div>
+        <div class="card"><div class="ic">&#128241;</div><h3>Works Everywhere</h3><p>Use it on your phone, tablet or computer — right in the browser.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="how" class="section alt">
+    <div class="wrap">
+      <h2>How it works</h2>
+      <div class="grid3">
+        <div class="step"><div class="n">1</div><h3>Copy the link</h3><p>Copy the URL of the YouTube video you want to save.</p></div>
+        <div class="step"><div class="n">2</div><h3>Paste it above</h3><p>Paste the link into the box and hit Download.</p></div>
+        <div class="step"><div class="n">3</div><h3>Pick video or audio</h3><p>Choose a quality — the file saves straight to your device.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="faq" class="section">
+    <div class="wrap narrow">
+      <h2>Frequently asked questions</h2>
+      <details><summary>Is ClipSave free?</summary><p>Yes. Every download is free and unlimited, with no account needed.</p></details>
+      <details><summary>Which formats can I download?</summary><p>You get direct links: combined video (usually 360p, sometimes 720p, when YouTube provides it) plus separate high-quality audio. The exact options depend on the video.</p></details>
+      <details><summary>Does it work on mobile?</summary><p>Yes — open this site in your phone's browser, paste a link and download.</p></details>
+      <details><summary>Do I need to install anything?</summary><p>No. Everything runs in your browser; nothing to install.</p></details>
+      <details><summary>Why do some videos fail?</summary><p>ClipSave fetches video info through a public service. Private, age-restricted or blocked videos can't be fetched — try again later or with another link.</p></details>
+      <details><summary>Is downloading allowed?</summary><p>Only download videos you own or that are explicitly free to reuse (for example Creative Commons). Downloading copyrighted content without permission may violate YouTube's Terms of Service.</p></details>
+    </div>
+  </div>
+
+  <!-- AD SLOT 2: second banner before the footer.
+       Paste your second ad unit code inside the div below. -->
+  <div class="wrap">
+    <div class="ad-slot">
+      <span>Advertisement</span>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PRIVACY ==================== -->
+<section id="sec-privacy" class="section legal" hidden>
+  <div class="wrap narrow">
+    <h2>Privacy Policy</h2>
+    <p>ClipSave runs entirely in your browser and does not require an account.</p>
+    <p>Pasted video links are sent to a public video-info service only to fetch download options for the requested video. We store nothing about you or your downloads, and never sell data.</p>
+    <p>We may use basic analytics and third-party advertising cookies as described by our ad partners.</p>
+    <a class="backlink" data-go="home">&larr; Back to downloader</a>
+  </div>
+</section>
+
+<!-- ==================== TERMS ==================== -->
+<section id="sec-terms" class="section legal" hidden>
+  <div class="wrap narrow">
+    <h2>Terms of Service</h2>
+    <p>ClipSave is a tool for downloading videos you have the right to download.</p>
+    <p>Only download videos you own, or that are explicitly free to reuse (for example Creative Commons).</p>
+    <p>Downloading copyrighted content without permission may violate YouTube's Terms of Service and local law.</p>
+    <p>Download availability depends on public third-party services and is not guaranteed.</p>
+    <a class="backlink" data-go="home">&larr; Back to downloader</a>
+  </div>
+</section>
+
+<!-- ==================== DMCA ==================== -->
+<section id="sec-dmca" class="section legal" hidden>
+  <div class="wrap narrow">
+    <h2>DMCA</h2>
+    <p>ClipSave respects copyright holders. This site does not host any video files; it only provides links.</p>
+    <p>If you believe content made available through this service infringes your copyright, contact us with the video URL and proof of ownership.</p>
+    <p>Valid requests are reviewed and infringing access is removed promptly.</p>
+    <a class="backlink" data-go="home">&larr; Back to downloader</a>
+  </div>
+</section>
+
+<!-- ==================== CONTACT ==================== -->
+<section id="sec-contact" class="section legal" hidden>
+  <div class="wrap narrow">
+    <h2>Contact</h2>
+    <p>For support, advertising, or takedown requests, email us.</p>
+    <p>Replace this address with your own support email before launch: support@example.com</p>
+    <a class="backlink" data-go="home">&larr; Back to downloader</a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>&copy; 2026 ClipSave. All rights reserved.</span>
+    <nav>
+      <a data-go="privacy">Privacy</a>
+      <a data-go="terms">Terms</a>
+      <a data-go="dmca">DMCA</a>
+      <a data-go="contact">Contact</a>
+    </nav>
+  </div>
+  <div class="wrap powered">Video info via the public Invidious API.</div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+var DEFAULT_API = 'https://invidious.f5.si';
+
+var form = document.getElementById('dl-form');
+var input = document.getElementById('url-input');
+var btn = document.getElementById('dl-btn');
+var statusBox = document.getElementById('status');
+var resultBox = document.getElementById('result');
+
+/* ---------- navigation ---------- */
+var SECTIONS = ['home','privacy','terms','dmca','contact'];
+function showSection(name){
+  if(SECTIONS.indexOf(name) < 0) name = 'home';
+  SECTIONS.forEach(function(s){
+    document.getElementById('sec-' + s).hidden = (s !== name);
+  });
+  if(name === 'home'){
+    if(location.hash && location.hash !== '#home') history.replaceState(null,'','#home');
+  } else {
+    location.hash = '#' + name;
+  }
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('[data-go]').forEach(function(el){
+  el.addEventListener('click', function(e){
+    e.preventDefault();
+    showSection(el.getAttribute('data-go'));
+  });
+});
+function hashToSection(){
+  var h = (location.hash || '').replace('#','');
+  if(h === 'how' || h === 'faq'){ showSection('home'); setTimeout(function(){
+    var t = document.getElementById(h); if(t) t.scrollIntoView();
+  }, 50); return; }
+  showSection(h);
+}
+window.addEventListener('hashchange', hashToSection);
+
+/* ---------- settings ---------- */
+var apiInput = document.getElementById('api-input');
+function getApiBase(){
+  try{
+    var v = localStorage.getItem('clipsave_api');
+    if(v && v.trim()) return v.trim().replace(/\/+$/,'');
+  }catch(e){}
+  return DEFAULT_API;
+}
+apiInput.value = getApiBase();
+document.getElementById('api-save').addEventListener('click', function(){
+  var v = apiInput.value.trim().replace(/\/+$/,'');
+  if(!/^https?:\/\//i.test(v)){ showStatus('Please enter a valid http(s) URL.', 'error'); return; }
+  try{ localStorage.setItem('clipsave_api', v); }catch(e){}
+  hideStatus();
+  showStatus('Server saved.', 'loading');
+  setTimeout(hideStatus, 1500);
+});
+document.getElementById('api-reset').addEventListener('click', function(){
+  try{ localStorage.removeItem('clipsave_api'); }catch(e){}
+  apiInput.value = DEFAULT_API;
+});
+
+/* ---------- helpers ---------- */
+function showStatus(msg, kind){
+  statusBox.hidden = false;
+  statusBox.className = 'status ' + kind;
+  statusBox.textContent = msg;
+}
+function hideStatus(){
+  statusBox.hidden = true;
+  statusBox.textContent = '';
+}
+function extractVideoId(url){
+  url = (url || '').trim();
+  var m = url.match(/(?:youtube\.com\/(?:watch\?[^#]*v=|shorts\/|embed\/|live\/)|youtu\.be\/|music\.youtube\.com\/watch\?[^#]*v=)([\w-]{11})/);
+  return m ? m[1] : null;
+}
+function fmtDuration(secs){
+  secs = parseInt(secs, 10);
+  if(isNaN(secs) || secs < 0) return '';
+  var h = Math.floor(secs/3600), m = Math.floor((secs%3600)/60), s = secs%60;
+  function p(n){ return (n<10?'0':'')+n; }
+  return h > 0 ? h+':'+p(m)+':'+p(s) : m+':'+p(s);
+}
+function fetchJson(url, ms){
+  ms = ms || 25000;
+  return new Promise(function(resolve, reject){
+    var done = false;
+    var timer = setTimeout(function(){
+      if(!done){ done = true; reject(new Error('Request timed out. Please try again.')); }
+    }, ms);
+    fetch(url, {headers:{'Accept':'application/json'}}).then(function(r){
+      if(done) return;
+      done = true; clearTimeout(timer);
+      if(!r.ok){ reject(new Error('Server error (' + r.status + '). Please try again.')); return; }
+      r.json().then(resolve, function(){ reject(new Error('Bad response from server.')); });
+    }).catch(function(){
+      if(done) return;
+      done = true; clearTimeout(timer);
+      reject(new Error('Network error. Check your connection and try again.'));
+    });
+  });
+}
+function friendlyError(msg){
+  msg = String(msg || '');
+  if(/timed out|network/i.test(msg)) return 'Network slow hai — dobara try karein.';
+  return msg;
+}
+
+/* ---------- main flow ---------- */
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+  var url = input.value.trim();
+  if(!url) return;
+  var vid = extractVideoId(url);
+  if(!vid){
+    showStatus('Please paste a valid YouTube video link.', 'error');
+    return;
+  }
+  resultBox.hidden = true;
+  btn.disabled = true;
+  showStatus('Fetching video info…', 'loading');
+  var apiUrl = getApiBase() + '/api/v1/videos/' + vid;
+  fetchJson(apiUrl).then(function(d){
+    if(!d || d.error || !d.title){
+      throw new Error('This video is unavailable or private.');
+    }
+    renderResult(vid, d);
+    hideStatus();
+  }).catch(function(err){
+    showStatus(friendlyError(err.message), 'error');
+  }).then(function(){
+    btn.disabled = false;
+  });
+});
+
+function addBtn(box, label, href){
+  var a = document.createElement('a');
+  a.className = 'qbtn';
+  a.textContent = '\u2B07 ' + label;
+  a.href = href;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  box.appendChild(a);
+}
+
+function renderResult(vid, d){
+  document.getElementById('r-thumb').src = 'https://i.ytimg.com/vi/' + vid + '/hqdefault.jpg';
+  document.getElementById('r-title').textContent = d.title || 'YouTube video';
+  var meta = [];
+  if(d.author) meta.push(d.author);
+  var dur = fmtDuration(d.lengthSeconds);
+  if(dur) meta.push(dur);
+  document.getElementById('r-meta').textContent = meta.join('  •  ');
+
+  var vBox = document.getElementById('r-video');
+  var aBox = document.getElementById('r-audio');
+  var voBox = document.getElementById('r-vonly');
+  vBox.innerHTML = ''; aBox.innerHTML = ''; voBox.innerHTML = '';
+
+  var combined = (d.formatStreams || []).filter(function(f){ return f.url; });
+  combined.forEach(function(f){
+    var label = (f.qualityLabel || f.quality || 'Video');
+    addBtn(vBox, label, f.url);
+  });
+  document.getElementById('g-video').hidden = combined.length === 0;
+
+  var audios = (d.adaptiveFormats || []).filter(function(f){
+    return f.url && f.type && f.type.indexOf('audio/') === 0;
+  });
+  var seen = {};
+  var audioBtns = 0;
+  audios.sort(function(a,b){ return (parseInt(b.bitrate||'0',10) - parseInt(a.bitrate||'0',10)); });
+  audios.forEach(function(f){
+    var cont = (f.container || 'audio').toUpperCase();
+    if(seen[cont]) return;
+    seen[cont] = true;
+    var kb = Math.round(parseInt(f.bitrate || '0', 10) / 1000);
+    var label = 'Audio ' + cont + (kb ? ' ' + kb + 'k' : '');
+    addBtn(aBox, label, f.url);
+    audioBtns++;
+  });
+  document.getElementById('g-audio').hidden = audioBtns === 0;
+
+  var vonly = (d.adaptiveFormats || []).filter(function(f){
+    return f.url && f.type && f.type.indexOf('video/') === 0;
+  });
+  var vseen = {};
+  vonly.forEach(function(f){
+    var key = (f.qualityLabel || '') + (f.container || '');
+    if(!key || vseen[key]) return;
+    vseen[key] = true;
+    addBtn(voBox, (f.qualityLabel || 'Video') + ' ' + (f.container || '').toUpperCase(), f.url);
+  });
+  document.getElementById('g-vonly').hidden = vonly.length === 0;
+
+  if(combined.length === 0 && audioBtns === 0 && vonly.length === 0){
+    showStatus('No downloadable formats found for this video.', 'error');
+    return;
+  }
+
+  resultBox.hidden = false;
+  resultBox.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+hashToSection();
+})();
+</script>
+</body>
+</html>
