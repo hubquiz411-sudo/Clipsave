@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: clipsave
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    # Render provides $PORT automatically; long timeout so big videos can finish
+    startCommand: gunicorn -w 2 --threads 2 --timeout 900 -b 0.0.0.0:$PORT app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
